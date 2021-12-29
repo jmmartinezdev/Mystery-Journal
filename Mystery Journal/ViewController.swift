@@ -11,18 +11,44 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var tvSecret: UITextView!
     
+    // MARK: - View Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        title = "Nothing to see here"
+        
         let notificationCenter = NotificationCenter.default
-        notificationCenter.addObserver(self, selector:
-        #selector(adjustForKeyboard), name:
-        UIResponder.keyboardWillHideNotification, object: nil)
-        notificationCenter.addObserver(self, selector:
-        #selector(adjustForKeyboard), name:
-                                        UIResponder.keyboardWillChangeFrameNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillHideNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(saveSecretMessage), name: UIApplication.willResignActiveNotification, object: nil)
         
     }
+    
+    @IBAction func authenticateTapped(_ sender: Any) {
+        unlockSecretMessage()
+    }
+    
+    // MARK: - Secret
+    
+    private func unlockSecretMessage() {
+        tvSecret.isHidden = false
+        title = "Secret stuff!"
+        
+        tvSecret.text = KeychainWrapper.standard.string(forKey: "SecretMessage") ?? ""
+    }
+    
+    @objc private func saveSecretMessage() {
+        guard tvSecret.isHidden == false else { return }
+        
+        KeychainWrapper.standard.set(tvSecret.text ?? "", forKey: "SecretMessage")
+        tvSecret.resignFirstResponder()
+        tvSecret.isHidden = true
+        title = "Nothing to see here"
+        
+    }
+    
+    // MARK: - Keyboard
     
     @objc func adjustForKeyboard(notification: Notification) {
         
