@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import LocalAuthentication
 
 class ViewController: UIViewController {
 
@@ -26,7 +27,22 @@ class ViewController: UIViewController {
     }
     
     @IBAction func authenticateTapped(_ sender: Any) {
-        unlockSecretMessage()
+        let context = LAContext()
+        var error: NSError?
+        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Unlock secret message") { [weak self] success, authenticationError in
+                if success == true {
+                    DispatchQueue.main.async {
+                        self?.unlockSecretMessage()
+                    }
+                } else {
+                    // ERROR
+                }
+            }
+        } else {
+            // NO BIOMETRY
+        }
+        
     }
     
     // MARK: - Secret
