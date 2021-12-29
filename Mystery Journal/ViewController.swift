@@ -36,11 +36,15 @@ class ViewController: UIViewController {
                         self?.unlockSecretMessage()
                     }
                 } else {
-                    // ERROR
+                    let ac = UIAlertController(title: "Authentication failed", message: "You could not be verified; please try again.", preferredStyle: .alert)
+                    ac.addAction(UIAlertAction(title: "OK", style: .default))
+                    self?.present(ac, animated: true)
                 }
             }
         } else {
-            // NO BIOMETRY
+            let ac = UIAlertController(title: "Biometry unavailable", message: "Your device is not configured for biometric authentication.", preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "OK", style: .default))
+            self.present(ac, animated: true)
         }
         
     }
