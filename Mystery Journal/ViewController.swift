@@ -29,6 +29,7 @@ class ViewController: UIViewController {
     @IBAction func authenticateTapped(_ sender: Any) {
         let context = LAContext()
         var error: NSError?
+        context.localizedFallbackTitle = ""
         if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
             context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Unlock secret message") { [weak self] success, authenticationError in
                 DispatchQueue.main.async {
