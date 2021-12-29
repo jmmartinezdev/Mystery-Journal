@@ -31,14 +31,14 @@ class ViewController: UIViewController {
         var error: NSError?
         if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
             context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Unlock secret message") { [weak self] success, authenticationError in
-                if success == true {
-                    DispatchQueue.main.async {
-                        self?.unlockSecretMessage()
+                DispatchQueue.main.async {
+                    if success == true {
+                            self?.unlockSecretMessage()
+                    } else {
+                        let ac = UIAlertController(title: "Authentication failed", message: "You could not be verified; please try again.", preferredStyle: .alert)
+                        ac.addAction(UIAlertAction(title: "OK", style: .default))
+                        self?.present(ac, animated: true)
                     }
-                } else {
-                    let ac = UIAlertController(title: "Authentication failed", message: "You could not be verified; please try again.", preferredStyle: .alert)
-                    ac.addAction(UIAlertAction(title: "OK", style: .default))
-                    self?.present(ac, animated: true)
                 }
             }
         } else {
