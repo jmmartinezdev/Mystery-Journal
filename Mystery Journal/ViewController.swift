@@ -56,11 +56,15 @@ class ViewController: UIViewController {
         tvSecret.isHidden = false
         title = "Secret stuff!"
         
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Do ne", style: .done, target: self, action: #selector(saveSecretMessage))
+        
         tvSecret.text = KeychainWrapper.standard.string(forKey: "SecretMessage") ?? ""
     }
     
     @objc private func saveSecretMessage() {
         guard tvSecret.isHidden == false else { return }
+        
+        self.navigationItem.rightBarButtonItem = nil
         
         KeychainWrapper.standard.set(tvSecret.text ?? "", forKey: "SecretMessage")
         tvSecret.resignFirstResponder()
